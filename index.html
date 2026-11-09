@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Bestie</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Arial Black', Impact, sans-serif;
+        }
+        
+        /* Заставка */
+        #overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            transition: opacity 0.5s ease;
+        }
+        #start-btn {
+            padding: 15px 40px;
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            background: linear-gradient(45deg, #ff007f, #7f00ff);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        #start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(127, 0, 255, 0.8);
+        }
+
+        /* Контейнер для эдита */
+        .edit-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Видео-плеер под формат TikTok */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 450px; /* Имитация экрана телефона на ПК */
+            max-height: 850px;
+            overflow: hidden;
+            background: #050505;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+        @media(max-width: 768px) {
+            .video-wrapper {
+                max-width: 100%;
+                max-height: 100%;
+            }
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0; left: 0;
+            opacity: 0;
+            transition: opacity 0.15s ease-in-out;
+        }
+        video.active {
+            opacity: 1;
+        }
+
+        /* Эффекты TikTok / Глитч / Вспышка */
+        .flash-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff;
+            opacity: 0;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .flash-active {
+            animation: flashAnim 0.3s ease-out;
+        }
+        @keyframes flashAnim {
+            0% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+
+        /* Тряска под бит */
+        .shake-active {
+            animation: shakeAnim 0.2s ease-in-out infinite;
+        }
+        @keyframes shakeAnim {
+            0% { transform: translate(0, 0) scale(1.03); }
+            20% { transform: translate(-3px, 2px) scale(1.03); }
+            40% { transform: translate(3px, -1px) scale(1.05); }
+            60% { transform: translate(-2px, -2px) scale(1.03); }
+            80% { transform: translate(2px, 1px) scale(1.05); }
+            100% { transform: translate(0, 0) scale(1.03); }
+        }
+
+        /* Субтитры в стиле TikTok эдитов */
+        .lyrics-container {
+            position: absolute;
+            bottom: 15%;
+            left: 5%;
+            width: 90%;
+            z-index: 20;
+            text-align: center;
+            pointer-events: none;
+        }
+        .lyric-text {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8), 2px 2px 0px #ff007f, -2px -2px 0px #00ffff;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.1s ease, transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .lyric-text.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Финал */
+        #final-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 30;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 32px;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay">
+        <button id="start-btn">Смотреть Эдит ✨</button>
+    </div>
+
+    <div class="edit-container">
+        <div class="video-wrapper" id="player-wrapper">
+            <div class="flash-overlay" id="flash"></div>
+            
+            <!-- Добавь свои видео файлы сюда -->
+            <video id="v1" src="videos/video1.mp4" playsinline muted loop></video>
+            <video id="v2" src="videos/video2.mp4" playsinline muted loop></video>
+            <video id="v3" src="videos/video3.mp4" playsinline muted loop></video>
+            <video id="v4" src="videos/video4.mp4" playsinline muted loop></video>
+            <video id="v5" src="videos/video5.mp4" playsinline muted loop></video>
+
+            <div class="lyrics-container">
+                <div class="lyric-text" id="lyric"></div>
+            </div>
+
+            <div id="final-screen">
+                <h1 style="text-shadow: 0 0 20px #ff007f;">ЛУЧШАЯ ПОДРУГА НА СВЕТЕ! 💜</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Твой аудиофайл -->
+    <audio id="main-audio" src="audio/music.mp3"></audio>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const overlay = document.getElementById('overlay');
+        const audio = document.getElementById('main-audio');
+        const lyricEl = document.getElementById('lyric');
+        const wrapper = document.getElementById('player-wrapper');
+        const flash = document.getElementById('flash');
+        const finalScreen = document.getElementById('final-screen');
+
+        const videos = [
+            document.getElementById('v1'),
+            document.getElementById('v2'),
+            document.getElementById('v3'),
+            document.getElementById('v4'),
+            document.getElementById('v5')
+        ];
+
+        // НАСТРОЙКА ТАЙМКОДОВ, ТЕКСТА И СМЕНЫ ВИДЕО
+        // time: секунда появления, text: субтитр, videoIndex: индекс видео от 0 до 4, shake: тряска под бас
+        const timeline = [
+            { time: 0, text: "ГОТОВА?", videoIndex: 0, shake: false },
+            { time: 2.5, text: "Смотри какой эдит я сделала", videoIndex: 0, shake: false },
+            { time: 5.0, text: "ЭТО МЫ С ТОБОЙ! 🔥", videoIndex: 1, shake: true },
+            { time: 7.8, text: "Самые лучшие моменты", videoIndex: 2, shake: false },
+            { time: 10.2, text: "Врубай басы! ⚡", videoIndex: 3, shake: true },
+            { time: 13.5, text: "Никому нас не разлучить", videoIndex: 4, shake: false },
+            { time: 17.0, text: "💜 💜 💜", videoIndex: 1, shake: true }
+        ];
+
+        let currentVideo = null;
+
+        startBtn.addEventListener('click', () => {
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.style.display = 'none', 500);
+            
+            audio.play();
+            playVideoIndex(0);
+            
+            // Запуск отслеживания времени
+            audio.addEventListener('timeupdate', checkTimeline);
+            audio.addEventListener('ended', showFinal);
+        });
+
+        function playVideoIndex(index) {
+            if (index >= videos.length || !videos[index]) return;
+            
+            if (currentVideo && currentVideo !== videos[index]) {
+                currentVideo.classList.remove('active');
+                currentVideo.pause();
+            }
+            
+            triggerFlash();
+            currentVideo = videos[index];
+            currentVideo.classList.add('active');
+            currentVideo.currentTime = 0;
+            currentVideo.play().catch(e => console.log("Видео ждет взаимодействия"));
+        }
+
+        function triggerFlash() {
+            flash.classList.remove('flash-active');
+            void flash.offsetWidth; // сброс анимации
+            flash.classList.add('flash-active');
+        }
+
+        let lastIndex = -1;
+        function checkTimeline() {
+            const currentTime = audio.currentTime;
+            
+            let activeIndex = -1;
+            for (let i = 0; i < timeline.length; i++) {
+                if (currentTime >= timeline[i].time) {
+                    activeIndex = i;
+                }
+            }
+
+            if (activeIndex !== -1 && activeIndex !== lastIndex) {
+                lastIndex = activeIndex;
+                const currentData = timeline[activeIndex];
+
+                // Меняем текст
+                lyricEl.classList.remove('visible');
+                setTimeout(() => {
+                    lyricEl.innerText = currentData.text;
+                    lyricEl.classList.add('visible');
+                }, 50);
+
+                // Меняем видео
+                playVideoIndex(currentData.videoIndex);
+
+                // Включаем/выключаем тряску
+                if (currentData.shake) {
+                    wrapper.classList.add('shake-active');
+                } else {
+                    wrapper.classList.remove('shake-active');
+                }
+            }
+        }
+
+        function showFinal() {
+            if (currentVideo) currentVideo.pause();
+            finalScreen.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
