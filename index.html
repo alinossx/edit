@@ -209,15 +209,18 @@
 
         // НАСТРОЙКА ТАЙМКОДОВ, ТЕКСТА И СМЕНЫ ВИДЕО
         // time: секунда появления, text: субтитр, videoIndex: индекс видео от 0 до 4, shake: тряска под бас
-        const timeline = [
-            { time: 0, text: "ГОТОВА?", videoIndex: 0, shake: false },
-            { time: 2.5, text: "Смотри какой эдит я сделала", videoIndex: 0, shake: false },
-            { time: 5.0, text: "ЭТО МЫ С ТОБОЙ! 🔥", videoIndex: 1, shake: true },
-            { time: 7.8, text: "Самые лучшие моменты", videoIndex: 2, shake: false },
-            { time: 10.2, text: "Врубай басы! ⚡", videoIndex: 3, shake: true },
-            { time: 13.5, text: "Никому нас не разлучить", videoIndex: 4, shake: false },
-            { time: 17.0, text: "💜 💜 💜", videoIndex: 1, shake: true }
-        ];
+const timeline = [
+    { time: 0, text: "Doctor...", videoIndex: 0, shake: false },
+    { time: 1.2, text: "Doctor Feelgood...", videoIndex: 0, shake: false },
+    { time: 3.5, text: "Come and make me...", videoIndex: 1, shake: false },
+    { time: 5.0, text: " FEEL REAL GOOD ", videoIndex: 1, shake: true }, // Первый кач баса!
+    { time: 7.2, text: "Strap me down...", videoIndex: 2, shake: false },
+    { time: 8.8, text: "INTO MY CHAIR ", videoIndex: 3, shake: true },   // Резкий дроп и тряска
+    { time: 11.0, text: "I’ve been feeling...", videoIndex: 4, shake: false },
+    { time: 12.5, text: " REAL BAD ", videoIndex: 0, shake: true },     // Финальный мощный бит, смена кадра
+    { time: 14.5, text: " BAD ", videoIndex: 1, shake: true }
+];
+
 
         let currentVideo = null;
 
